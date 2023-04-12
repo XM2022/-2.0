@@ -1,4 +1,4 @@
-# XKcloud
+# 星空网盘
 一个个人网盘项目. 使用了SpringBoot、SpringMVC、Mybatis、MySQL数据库、JSP、Ajax等框架技术.  
 
 具备以下功能： 
