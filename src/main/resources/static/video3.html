@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>音视频播放</title>
+<style type="text/css">
+    video{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    img{
+        width: 70%;
+    }
+    
+    img{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+</head>
+
+<body>
+
+<br>
+<br>
+<br>
+     	<video id='v' width="60%" controls preload="auto" ></video>
+<!-- 	<video  width="60%" controls>
+	    <source id="v" src="">
+	    <object data="" width="60%">
+	      <embed src="" width="60%" />
+	    </object>
+	    你的浏览器不支持播放该视频！
+	</video> -->
+	
+	<!-- <img alt="" src="file:///D:/MyWebDiskServer/2023-03-12/寒秋.png"> -->
+	
+	
+	
+<script type="text/javascript">
+window.onload = function(){
+        var video = document.querySelector('#v');
+        var mediaSource = new MediaSource();
+        video.src = URL.createObjectURL(mediaSource);
+        video.oncanplay=console.log("Can start playing video");
+        mediaSource.addEventListener('sourceopen', sourceOpen);
+
+        function sourceOpen(e) {
+            URL.revokeObjectURL(video.src);
+            // 设置 媒体的编码类型
+            var mime = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+            var mediaSource = e.target;
+            var sourceBuffer = mediaSource.addSourceBuffer(mime);
+            var videoUrl = 'http://192.168.2.215:9101/xkcloud/test?pos=0';
+            fetch(videoUrl).then(function(response) {
+                    console.log(response)
+                    return response.arrayBuffer();
+                })
+                .then(function(arrayBuffer) {
+                    sourceBuffer.addEventListener('updateend', function(e) {
+                        if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
+                            mediaSource.endOfStream();
+                            // 在数据请求完成后，我们需要调用 endOfStream()。它会改变 MediaSource.readyState 为 ended 并且触发 sourceended 事件。
+                            console.log("数据请求完成.")
+                            /* video.play().then(function() {}).catch(function(err) {
+                                console.log(err)
+                            }); */
+                        }
+                    });
+                    sourceBuffer.appendBuffer(arrayBuffer);
+                });
+        }
+	
+}
+
+</script>
+</body>
+</html>

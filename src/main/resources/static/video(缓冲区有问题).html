@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>音视频播放</title>
+<style type="text/css">
+    video{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    img{
+        width: 70%;
+    }
+    
+    img{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+</head>
+<body>
+
+<br>
+<br>
+<br>
+     	<video id='v' width="60%" controls></video>
+<!-- 	<video  width="60%" controls>
+	    <source id="v" src="">
+	    <object data="" width="60%">
+	      <embed src="" width="60%" />
+	    </object>
+	    你的浏览器不支持播放该视频！
+	</video> -->
+	
+	<!-- <img alt="" src="file:///D:/MyWebDiskServer/2023-03-12/寒秋.png"> -->
+	
+	
+	
+<script type="text/javascript">
+
+let isDone = false; // 是否传输结束
+let isReady = true; // 是否准备好下一次加载
+let bufferList = []; // 缓冲区数组
+let mime = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';  //标识所接收的数据类型
+
+if (!('MediaSource' in window) || !MediaSource.isTypeSupported(mime)) {
+	console.error('不支持MIME类型: ', mimeCodec);
+}
+const mediaSource = new MediaSource();
+const url = window.URL.createObjectURL(mediaSource);
+const source = document.getElementById("v");
+console.log("url=" + url);
+console.log("source=" + source.src);
+source.setAttribute("src", url);
+source.oncanplay=console.log("Can start playing video");
+console.log("source=" + source.src);
+
+// 检测是否为open状态，否则添加监听器，等到open状态就绪后再传输
+if (mediaSource.readyState === 'open') {
+  createSourceBuffer();
+} else {
+  mediaSource.addEventListener('sourceopen', () => {
+    createSourceBuffer();
+  });
+}
+
+// 发送请求并开始传输
+const createSourceBuffer = () => {
+  const sourceBuffer = mediaSource.addSourceBuffer(mime);
+
+  // 传输完毕事件监听器
+  sourceBuffer.addEventListener('updateend', () => {
+    if(bufferList.length !== 0){
+      // 读取完毕后缓冲区有数据，从缓冲区读取
+      sourceBuffer.appendBuffer(bufferList.shift());
+    }else{
+      // 缓冲区无数据
+      if(isDone){
+        // 传输结束，关闭
+        sourceBuffer.abort();
+        mediaSource.endOfStream();
+        //source.play();   --浏览器不允许通过js自动播放.
+      }else{
+        isReady = true; // 准备好进行下一次传输
+      }
+    }
+  })
+
+  //let fectOption = null;
+  window.fetch("http://192.168.2.215:9101/xkcloud/test?pos=0"/* , fetchOption */).then((response) => {
+  if(!response.ok){
+    throw new Error('服务器连接失败')
+  }else{
+    const reader = response.body.getReader(); // 获取读取器
+
+    // 声明处理函数
+    const processRead = async (params) => {
+      const {done, value} = params;
+      if(!done){
+        if(isReady){
+          // 如果已准备好则直接读取
+          sourceBuffer.appendBuffer(value);
+          this.isReady = false;
+        }else{
+          // 否则加入缓冲区
+          bufferList = [...bufferList, value];
+        }
+        // 读取完毕后递归进行下一次读取
+        await reader.read().then(processRead);
+      }else{
+        console.log('可读流读取完毕');
+        isDone = true;
+      }
+    }
+
+    // 开始读取
+    reader.read().then(processRead);
+  }
+})
+}
+
+
+</script>
+</body>
+</html>

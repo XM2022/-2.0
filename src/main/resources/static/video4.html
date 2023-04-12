@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>音视频播放</title>
+<style type="text/css">
+    video{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    img{
+        width: 70%;
+    }
+    
+    img{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+<link href="css/video-js.css" rel="stylesheet">
+<script src="js/video.js"></script>
+<script src="js/postbird-mp4-to-blob.min.js"></script>
+</head>
+<body>
+
+<br>
+<br>
+<br>
+    <video-js id=example-video width=1280 height=720
+              class="vjs-default-skin" controls>
+          <source
+             src="http://192.168.2.215:9101/xkcloud/xm/video/中小学武术健身操-旭日东升.m3u8"
+             type="application/x-mpegURL">
+    </video-js>
+    <script>
+      var player = videojs('example-video');
+    </script>
+
+     	<!-- <video id='v' width="60%" controls></video> -->
+     	<!-- <video id="v" controls>
+     	      <source src="http://192.168.2.215:9101/xkcloud/test?pos=0"  type="application/x-mpegURL">
+     	</video> -->
+     	
+<!-- 	<video  width="60%" controls>
+	    <source id="v" src="">
+	    <object data="" width="60%">
+	      <embed src="" width="60%" />
+	    </object>
+	    你的浏览器不支持播放该视频！
+	</video> -->
+	
+	<!-- <img alt="" src="file:///D:/MyWebDiskServer/2023-03-12/寒秋.png"> -->
+	
+	
+	
+<script type="text/javascript">
+    /* let v1 = videojs("v", {
+            preload: "auto"
+	    }, function(){
+	    	console.log("视频加载完成.");
+    }
+    ) */
+
+	/* var url = 'http://192.168.2.215:9101/xkcloud/test?pos=0';
+	var mimeCodec = 'video/mp4; codecs="avc1.640028, mp4a.40.2"';
+	PostbirdMp4ToBlob.init('#v',url,mimeCodec);  */
+</script>
+</body>
+</html>

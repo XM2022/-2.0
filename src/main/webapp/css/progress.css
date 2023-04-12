@@ -1,0 +1,24 @@
+@charset "UTF-8";
+#progress{
+    width: 200px;
+    height: 10px; /*进度条轨道的高度*/
+    /* border: 10px solid orange; */  /* 进度条轨道边框 */
+    background: rgb(128, 128, 128); /*轨道的颜色*/
+    overflow: hidden; 
+    border-radius: 30px; 
+    position: relative;
+    top: -20px;
+    left: 100px;
+}
+#progress-bar{
+    width: 0%; /* 控制进度条的进度 */
+    /* background: linear-gradient(to right, orange 0%, green 100%); */  /* 渐变样式 */
+    background: rgb(18, 224, 70);
+    height: 10px;
+    border-radius: 30px;
+    /* 设置的文字的样式 */
+    font-size: 10px;    /* 一般与height保持一致 */
+    line-height: 10px;  /* 与height保持一致可以实现文本垂直居中效果 */
+    text-align: right;  /* 文本水平对齐 */
+    color: white;
+}
